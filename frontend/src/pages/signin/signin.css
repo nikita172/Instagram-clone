@@ -1,0 +1,163 @@
+.signinContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.signinWrapper{
+  display: flex;
+  margin: 50px 400px;
+}
+.heroImg{
+  width: 400px;
+  height: 600px;
+  display: flex;
+  flex: 1;
+}
+.mainContainer{
+  margin-left: 30px;
+  font-family: "Roboto";
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+.mainContainerTop{
+  display: flex;
+  flex: 2;
+  margin-bottom: 20px;  
+  border: 1px solid rgb(197, 191, 191);
+  padding: 35px;
+  flex-direction: column;
+}
+.signinForm{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;  
+}
+.title{
+  font-family: 'Satisfy', cursive;
+  font-size: 40px;
+  margin-bottom: 20px;
+  margin-top: 5px;
+}
+.inputField{
+  padding: 10px 8px;
+  width: 250px;
+  outline: none;
+  border: 1px solid rgb(197, 191, 191);
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+.signinButton{
+  border: none;
+  color: white;
+  background-color:rgb(92, 178, 253);
+  padding: 8px;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 5px;
+  font-weight: 500;
+  font-family: "Roboto";
+  margin-top: 5px;
+}
+.orSection{
+  display: flex;
+  align-items: center;
+  color: rgb(156, 155, 155);
+  margin-top: 20px;
+}
+.horizontalBorder{
+  background-color: rgb(156, 155, 155);
+  height: .5px;
+  display: flex;
+  flex: 2;
+}
+.orTitle{
+  padding:0px 20px;
+  font-size: 13px;
+  font-family: "Roboto";
+  font-weight: 500;
+}
+.loginChoiceContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+.fbImg{
+  width: 30px;
+  height: 28px;
+  margin-right: 8px;
+}
+.loginWithFbTitle{
+  font-family: "Roboto";
+  font-size: 14px;
+  color: blue;
+}
+.forgetPassword{
+  text-align: center;
+  font-size: 12px;
+  color: blue;
+  margin-top: 15px;
+}
+.mainContainerBottom{
+  display: flex;
+  flex: 1;  
+  flex-direction: column;
+}
+.mc1{
+  border: 1px solid rgb(197, 191, 191);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 5px 35px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-family: "Roboto";
+  letter-spacing: .5px;
+}
+.signupBtn{
+  color: rgb(92, 178, 253);
+  padding-left: 5px;
+}
+.mc2{
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+  padding: 0px 35px;
+}
+.downloadSection{
+  text-align: center;
+  margin-top: 10px;
+}
+.sourceImg{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+.gpImg{
+  width: 120px;
+  height: 60px;
+}
+.gpImg2{
+  width: 100px;
+  height: 40px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

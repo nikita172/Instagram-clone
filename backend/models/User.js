@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 const userSchema = mongoose.Schema({
-    userName: {
+    fullName: {
         type: String,
         required: false
     },
-    uniqueName: {
+    userName: {
         type: String,
         required: true,
         unique: true
@@ -59,7 +59,14 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    blueTick: {
+        type: Boolean,
+        default: false,
+    },
     photos: {
+        type: Array
+    },
+    story: {
         type: Array
     }
 }, { timestamps: true })

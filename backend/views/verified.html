@@ -17,7 +17,7 @@
             display: flex;
         }
 
-        div {
+        .outerDiv {
             display: flex;
             flex-direction: column;
             margin: 0 auto;
@@ -25,6 +25,12 @@
             align-items: center;
             padding-bottom: 25px;
             padding-top: 10px;
+            align-self: center;
+        }
+        .innerDiv{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             align-self: center;
         }
 
@@ -84,7 +90,8 @@
     console.log(message)
 
     const bodyContent = !error
-        ? `<div style="background-color: #065f46">
+        ? `<div style="background-color: #065f46" class="outerDiv">
+            <div class="innerDiv">
       <h2>Email has been verified</h2>
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -101,8 +108,10 @@
       <h3>You can now log in</h3>
 
       <p>@ToThePointCode</p>
+      </div>
     </div>`
-        : `<div style="background-color: #991B1B">
+        : `<div style="background-color: #991B1B" class="outerDiv">
+            <div class="innerDiv">
       <h2>${message}</h2>
       <svg 
         xmlns="http://www.w3.org/2000/svg" 
@@ -116,6 +125,7 @@
       <h3>Please try again!</h3>
 
       <p>@ToThePointCode</p>
+      </div>
     </div>`;
 
     document.body.style.backgroundColor = error ? "#7F1D1D" : "#064e3b";

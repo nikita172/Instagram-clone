@@ -6,13 +6,17 @@ const bcrypt = require("bcrypt")
 const { v4: uuidv4 } = require("uuid")
 require("dotenv").config();
 const nodemailer = require("nodemailer");
+const path = require("path")
+
+//for test purpose
+let testAccount = nodemailer.createTestAccount(); //fake smtp server
+
 const transporter = nodemailer.createTransport({
-    host: "mail.nikitarawat.site",
-    port: 465,
-    secure: true,
+    host: 'smtp.ethereal.email',
+    port: 587,
     auth: {
-        user: process.env.AUTH_EMAIL,
-        pass: process.env.AUTH_PASS
+        user: 'paige.rice@ethereal.email',
+        pass: 'eg4wtafyxyX8EdwEbz'
     }
 })
 
@@ -42,6 +46,7 @@ transporter.verify((error, success) => {
 
 //signup
 module.exports.signupWithEmail = async (req, res) => {
+    console.log("hello")
     const { email, password, fullName, userName } = req.body;
     User.find({ email })
         .then((result) => {
@@ -98,14 +103,15 @@ module.exports.signupWithEmail = async (req, res) => {
         })
 }
 
-const sendVerificationEmail = ({ _id, email }, res) => {
+const sendVerificationEmail = async ({ _id, email }, res) => {
+
     const currentUrl = "http://localhost:8000/";
     const uniqueString = uuidv4() + _id;
     const mailOptions = {
-        from: process.env.AUTH_EMAIL,
+        from: "paige.rice@ethereal.email",
         to: email,
-        subject: "Please verify your email address",
-        html: `<p>Verify your email address to complete the signup and login into you account.</p>
+        subject: "verify your email address",
+        html: `<p>Please, Verify your email address to complete the signup and login into you account.</p>
         <p>This link <b> expires in 6 hours.</b></p><p>Press<a href=${currentUrl + "auth/user/verify/" + _id + "/" + uniqueString}> here </a>to proceed. </p>`
     }
     bcrypt.hash(uniqueString, 10)
@@ -147,11 +153,16 @@ const sendVerificationEmail = ({ _id, email }, res) => {
             })
         })
 }
-module.exports.verifyEmail = async((req, res) => {
+
+//verify email
+module.exports.verifyEmail = async (req, res) => {
     const { userId, uniqueString } = req.params;
+    console.log(userId)
+    console.log(uniqueString)
+
     UserVerification.find({ userId })
         .then(result => {
-            if (res.length > 0) {
+            if (result.length > 0) {
                 //user verification record exist so we can proceed
                 const { expiresAt } = result[0];
                 const hashedUniqueString = result[0].uniqueString;
@@ -162,10 +173,12 @@ module.exports.verifyEmail = async((req, res) => {
                             User.deleteOne({ _id: userId })
                                 .then(() => {
                                     let message = "Link has expired. Please sign up again"
+                                    console.log(message)
                                     res.redirect(`auth/user/verified/?error=true&message=${message}`);
 
                                 }).catch(err => {
                                     let message = "clearing user with expired unique string failed";
+                                    console.log(message)
                                     res.redirect(`auth/user/verified/?error=true&message=${message}`)
                                 })
                         })
@@ -179,47 +192,55 @@ module.exports.verifyEmail = async((req, res) => {
                     //first compare the hashed unique string
                     bcrypt.compare(uniqueString, hashedUniqueString)
                         .then(result => {
+
                             if (result) {
                                 //string matches
                                 User.updateOne({ _id: userId }, { verified: true })
                                     .then(() => {
                                         UserVerification.deleteOne({ userId })
                                             .then(() => {
+                                                console.log("checks")
                                                 res.sendFile(path.join(__dirname, "../views/verified.html"))
                                             }).catch(err => {
                                                 console.log(err);
                                                 let message = "An error occurred while finalizing successful user verification";
-                                                res.redirect(`auth/user/verified/?error=true&message=${message}`)
+                                                res.redirect(`/auth/user/verified/?error=true&message=${message}`)
                                             })
                                     }).catch(err => {
                                         console.log(err);
                                         let message = "An error occurred while updating user record to show verified";
-                                        res.redirect(`auth/user/verified/?error=true&message=${message}`)
+                                        res.redirect(`/auth/user/verified/?error=true&message=${message}`)
                                     })
                             } else {
                                 //record exist but incorrect verification details
                                 let message = "incorrect verification details passed. check your inbox.";
-                                res.redirect(`auth/user/verified/?error=true&message=${message}`)
+                                console.log(message)
+
+                                res.redirect(`/auth/user/verified/?error=true&message=${message}`)
                             }
                         }).catch(err => {
                             let message = "An error occurred while comparing unique string";
-                            res.redirect(`auth/user/verified/?error=true&message=${message}`)
+                            console.log(message)
+
+                            res.redirect(`/auth/user/verified/?error=true&message=${message}`)
                         })
                 }
             } else {
+                console.log("blunder")
                 //user verification record doesn't exist
                 let message = "account record doesn't exist or has been verified already. please signup or login in";
-                res.redirect(`auth/user/verified/?error=true&message=${message}`)
+                res.redirect(`/auth/user/verified/?error=true&message=${message}`)
             }
         }).catch(err => {
             console.log(err);
             let message = "An error occurred while checking for existing user verification record";
-            res.redirect(`auth/user/verified/?error=true&message=${message}`)
+            res.redirect(`/auth/user/verified/?error=true&message=${message}`)
         })
-})
+}
 
 // verify page route
 module.exports.verifyPage = async (req, res) => {
+    console.log("calls")
     res.sendFile(path.join(__dirname, "../views/verified.html"))
 }
 

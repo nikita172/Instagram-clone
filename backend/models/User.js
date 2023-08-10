@@ -1,46 +1,40 @@
 const mongoose = require("mongoose");
 const userSchema = mongoose.Schema({
-    userName: {
-        type: String,
+    fullName: {
+        type: mongoose.Schema.Types.String,
         required: false
     },
-    uniqueName: {
-        type: String,
+    userName: {
+        type: mongoose.Schema.Types.String,
         required: true,
         unique: true
     },
     bio: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         required: false
     },
     profilePicture: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         required: false
     },
     mobileNo: {
-        type: String,
-        required: false,
+        type: mongoose.Schema.Types.String,
         unique: true,
     },
     email: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         required: false,
         unique: true,
     },
-    emailVerified: {
-        type: Boolean,
-        default: false,
-    },
     password: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         required: false,
     },
     gender: {
-        type: String,
-        required: false,
+        type: mongoose.Schema.Types.String,
     },
     dob: {
-        type: String,
+        type: mongoose.Schema.Types.String,
         required: false,
     },
     followers: {
@@ -59,9 +53,17 @@ const userSchema = mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    blueTick: {
+        type: Boolean,
+        default: false,
+    },
     photos: {
         type: Array
+    },
+    story: {
+        type: Array
     }
-}, { timestamps: true })
+},
+    { timestamps: true })
 
 module.exports = mongoose.model('User', userSchema)

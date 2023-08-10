@@ -1,0 +1,191 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+body {
+  background-color: #fafafa;
+}
+.signupContainer {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.signupTopContainer {
+  background: #fff;
+  border: 1px solid rgb(217, 212, 212);
+  width: 300px;
+  padding: 33px;
+}
+.title {
+  margin: 15px auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Satisfy", cursive;
+  font-size: 45px;
+  margin-bottom: 15px;
+}
+.info {
+  font-weight: 500;
+  line-height: 20px;
+  font-size: 18px;
+  color: #848181;
+  text-align: center;
+  font-family: "Roboto";
+}
+.loginwithfb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: "Roboto";
+}
+button {
+  width: 270px;
+  margin: 17px;
+  padding: 6px;
+  background-color: rgb(47, 124, 255);
+  color: white;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+}
+button img {
+  background-color: #ffffff;
+  height: 20px;
+  border-radius: 10px;
+  margin-right: 10px;
+}
+.orSection {
+  display: flex;
+  align-items: center;
+  color: #848181;
+  margin: 17px;
+}
+.horizontalBorder {
+  background-color: rgb(217, 212, 212);
+  height: 0.5px;
+  display: flex;
+  flex: 2;
+}
+.orTitle {
+  padding: 0px 15px;
+  font-size: 14px;
+  font-family: "Roboto";
+  font-weight: 450;
+}
+.signupForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.inputField {
+  padding: 10px 8px;
+  width: 250px;
+  outline: none;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  font-size: 12px;
+}
+::placeholder {
+  color: #999;
+}
+.extrainfo {
+  margin: 10px 20px 15px 20px;
+  text-align: center;
+  color: #848181;
+  font-family: "Roboto";
+  font-size: 12px;
+}
+a {
+  text-decoration: none;
+}
+.termsinfo {
+  margin: 10px 20px 0px 20px;
+  text-align: center;
+  color: #848181;
+  font-family: "Roboto";
+  font-size: 12px;
+}
+.signupbtn {
+  padding: 7px;
+  font-weight: 700px;
+}
+.mainContainerBottom {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Roboto";
+}
+.mc1 {
+  font-size: 13px;
+  font-family: "Roboto";
+  letter-spacing: 0.5px;
+  background: #fff;
+  border: 1px solid rgb(217, 212, 212);
+  width: 300px;
+  padding: 25px 33px 25px 33px;
+}
+.signupBtn {
+  color: rgb(47, 124, 255);
+  padding-left: 5px;
+}
+.mc2 {
+  display: flex;
+  flex-direction: column;
+  flex: 2;
+  padding: 0px 35px;
+}
+.downloadSection {
+  font-size: 13px;
+  text-align: center;
+  margin-top: 5px;
+}
+.sourceImg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+}
+.gpImg {
+  width: 150px;
+  height: 60px;
+}
+.gpImg2 {
+  width: 110px;
+  height: 40px;
+}
+.bottom {
+  text-align: center;
+  margin: 45px 45px 15px 45px;
+  font-size: 13px;
+  padding: 40px;
+}
+.bottom a {
+  margin-right: 17px;
+  color: #848181;
+  font-family: "Roboto";
+  font-weight: normal;
+}
+@media screen and (min-width: 100px) and (max-width: 1250px) {
+  .bottom {
+    line-height: 2;
+  }
+}
+
+select {
+  margin-top: 20px;
+  margin-right: 30px;
+  border: none;
+  color: #848181;
+  background-color: #fafafa;
+  width: 70px;
+}
+.drpdwn {
+  margin: 20px 0px 0px 10px;
+  color: #848181;
+}

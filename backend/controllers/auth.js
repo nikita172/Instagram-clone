@@ -7,6 +7,7 @@ const { v4: uuidv4 } = require("uuid")
 require("dotenv").config();
 const nodemailer = require("nodemailer");
 const path = require("path")
+const jwt = require("jsonwebtoken")
 
 //for test purpose
 let testAccount = nodemailer.createTestAccount(); //fake smtp server
@@ -15,8 +16,8 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
     auth: {
-        user: 'paige.rice@ethereal.email',
-        pass: 'eg4wtafyxyX8EdwEbz'
+        user: 'soledad.batz4@ethereal.email',
+        pass: 'RFkAkCKrWJRDjZMzEp'
     }
 })
 
@@ -28,7 +29,22 @@ transporter.verify((error, success) => {
         console.log(success);
     }
 })
-
+// const token = jwt.sign(
+//     {
+//         userId,
+//         email: "nikitarwt789@gmail.com"
+//     },
+//     process.env.TOKEN_SECRET,
+//     { expiresIn: 365 * 60 * 24 * 1000 }
+// )
+// const response = {
+//     status: "Success",
+//     message: "User verified!",
+//     token,
+//     user: userId
+// }
+// console.log(response);
+// res.json(response);
 
 // module.exports.sendOtp = async (req, res) => {
 //     try {
@@ -104,11 +120,12 @@ module.exports.signupWithEmail = async (req, res) => {
 }
 
 const sendVerificationEmail = async ({ _id, email }, res) => {
-
     const currentUrl = "http://localhost:8000/";
     const uniqueString = uuidv4() + _id;
+    console.log(uniqueString)
+    console.log(_id)
     const mailOptions = {
-        from: "paige.rice@ethereal.email",
+        from: "soledad.batz4@ethereal.email",
         to: email,
         subject: "verify your email address",
         html: `<p>Please, Verify your email address to complete the signup and login into you account.</p>
@@ -153,7 +170,6 @@ const sendVerificationEmail = async ({ _id, email }, res) => {
             })
         })
 }
-
 //verify email
 module.exports.verifyEmail = async (req, res) => {
     const { userId, uniqueString } = req.params;
@@ -173,19 +189,16 @@ module.exports.verifyEmail = async (req, res) => {
                             User.deleteOne({ _id: userId })
                                 .then(() => {
                                     let message = "Link has expired. Please sign up again"
-                                    console.log(message)
-                                    res.redirect(`auth/user/verified/?error=true&message=${message}`);
+                                    res.redirect(`/auth/user/verified/?error=true&message=${message}`);
 
                                 }).catch(err => {
                                     let message = "clearing user with expired unique string failed";
-                                    console.log(message)
-                                    res.redirect(`auth/user/verified/?error=true&message=${message}`)
+                                    res.redirect(`/auth/user/verified/?error=true&message=${message}`)
                                 })
                         })
                         .catch(err => {
-                            console.log(err);
                             let message = "An error occurred while clearing expired user verification record";
-                            res.redirect(`auth/user/verified/?error=true&message=${message}`)
+                            res.redirect(`/auth/user/verified/?error=true&message=${message}`)
                         })
                 } else {
                     //valid record exist so we validate the user string
@@ -199,7 +212,6 @@ module.exports.verifyEmail = async (req, res) => {
                                     .then(() => {
                                         UserVerification.deleteOne({ userId })
                                             .then(() => {
-                                                console.log("checks")
                                                 res.sendFile(path.join(__dirname, "../views/verified.html"))
                                             }).catch(err => {
                                                 console.log(err);
@@ -244,44 +256,74 @@ module.exports.verifyPage = async (req, res) => {
     res.sendFile(path.join(__dirname, "../views/verified.html"))
 }
 
-// module.exports.sendEmail = async (req, res) => {
-//     const { subject, to, message } = req.body;
-//     const mailOptions = {
-//         from: process.env.AUTH_EMAIL,
-//         to: to,
-//         subject: subject,
-//         text:message
-//     }
 
-//     transporter.sendMail(mailOptions)
-//         .then(() => {
-//             res.json({
-//                 status: "SUCCESS",
-//                 message:"Message sent successfully"
-//             }).catch(err => {
-//                 console.log(err)
-//                 res.json({
-//                     status: "FAILED",
-//                     message: "An error occurred"
-//                 })
-//         })
-//     })
-// }
+module.exports.signIn = async (req, res) => {
+    console.log("sign in runs....")
+    const { user, password } = req.body;
+    User.find({
+        $or: [
+            { userName: user },
+            { email: user },
+            { mobileNo: user }
+        ]
+    }).then(result => {
+        if (result.length > 0) {
+            const hashedPassword = result[0].password;
+            const userName = result[0].userName;
+            const userId = result[0]._id;
+            const verified = result[0].verified;
+            bcrypt.compare(password, hashedPassword)
+                .then(result => {
+                    if (result) {
+                        if (verified) {
+                            const token = jwt.sign(
+                                {
+                                    userName,
+                                    userId
+                                },
+                                process.env.TOKEN_SECRET,
+                                { expiresIn: 365 * 60 * 24 * 1000 }
+                            )
+                            res.json({
+                                status: "SUCCESS",
+                                message: "Sign In successfully",
+                                token,
+                                userId
+                            })
+                        } else {
 
+                            res.json({
+                                status: "FAILED",
+                                message: "You are not verified yet. Please verified your account!"
+                            })
 
-// module.exports.login = async (req, res) => {
-//     console.log("sign up with email runs....")
-//     try {
-//         const { userName, password } = req.body;
-//         const setUser = new User({
-//             userName: userName,
-//             password: password
-//         })
-//         await setUser.save()
-//         res.json({
-//             status: 1,
-//             success: true
-//         })
-//     } catch (err) { console.log(err) }
+                        }
 
-// }
+                    } else {
+                        res.json({
+                            status: "FAILED",
+                            message: "Incorrect password!"
+                        })
+                    }
+                }).catch(err => {
+                    console.log(err);
+                    res.json({
+                        status: "FAILED",
+                        message: "Something went wrong while validating the password!"
+                    })
+                })
+        } else {
+            res.json({
+                status: "FAILED",
+                message: "User does not exist. Please check your {user name, email or phone no.} properly!"
+            })
+        }
+    }).catch(err => {
+        console.log(err);
+        res.json({
+            status: "FAILED",
+            message: "Something went wrong while finding credentials!"
+        })
+    })
+
+}

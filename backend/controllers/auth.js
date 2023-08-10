@@ -256,6 +256,71 @@ module.exports.verifyPage = async (req, res) => {
     res.sendFile(path.join(__dirname, "../views/verified.html"))
 }
 
+//resend email for email verification
+module.exports.resendEmailVerification = async (req, res) => {
+    const { id, email } = req.body;
+    User.find({ _id: id })
+        .then(result => {
+            if (result.length > 0) {
+                console.log(result)
+                if (!result[0].verified) {
+                    UserVerification.deleteOne({ userId: id })
+                        .then(result => {
+                            console.log(result);
+                            const data = {
+                                _id: id,
+                                email
+                            }
+                            sendVerificationEmail(data, res)
+                        }).catch(err => {
+                            console.log(err)
+                            res.json({
+                                status: "FAILED",
+                                message: "An error occurred while resending email"
+                            })
+                        })
+                } else {
+                    UserVerification.deleteOne({ userId: id })
+                        .then(result => {
+                            if (result) {
+                                res.json({
+                                    status: "SUCCESS",
+                                    message: "Already verified.Please Signin"
+                                })
+
+                            } else {
+                                res.json({
+                                    status: "SUCCESS",
+                                    message: "Already verified.Please Signin"
+                                })
+                            }
+
+                        })
+                }
+            } else {
+                res.json({
+                    status: "FAILED",
+                    message: "Please login first!"
+                })
+            }
+
+        }).catch(err => {
+            res.json({
+                status: "FAILED",
+                message: "Something went wrong while checking the data!"
+            })
+        })
+
+}
+
+
+
+//sign up with mobile number
+module.exports.signupWithMobile = async (req, res) => {
+    console.log("sign up with mobile api runs.")
+    const { mobileNo, password, userName, fullName } = req.body;
+
+}
 
 module.exports.signIn = async (req, res) => {
     console.log("sign in runs....")

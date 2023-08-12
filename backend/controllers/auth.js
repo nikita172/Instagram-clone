@@ -1,6 +1,6 @@
 const User = require("../models/User")
 const UserVerification = require("../models/UserVerification")
-
+const PasswordReset = require("../models/PasswordReset")
 const sms = require("../middlewares/sms")
 const bcrypt = require("bcrypt")
 const { v4: uuidv4 } = require("uuid")
@@ -20,8 +20,8 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
     auth: {
-        user: 'soledad.batz4@ethereal.email',
-        pass: 'RFkAkCKrWJRDjZMzEp'
+        user: 'lillian70@ethereal.email',
+        pass: 'dq1RDC6jNBNQU4ajbU'
     }
 })
 
@@ -55,11 +55,20 @@ module.exports.signupWithEmail = async (req, res) => {
     User.find({ email })
         .then((result) => {
             if (result.length) {
-                res.json({
-                    status: "FAILED",
-                    message: "User already exist."
-                })
-            } else {
+                if (result[0].verified) {
+                    res.json({
+                        status: "FAILED",
+                        message: "User already exist. Please login!"
+                    })
+                }
+                else {
+                    res.json({
+                        status: "FAILED",
+                        message: "Oops! Looks like you didn't verify your account. Please verify your account. Check Inbox."
+                    })
+                }
+            }
+            else {
                 User.find({ userName })
                     .then((result) => {
                         if (result.length) {
@@ -227,11 +236,6 @@ module.exports.verifyEmail = async (req, res) => {
         })
 }
 
-// verify page route
-module.exports.verifyPage = async (req, res) => {
-    res.sendFile(path.join(__dirname, "../views/verified.html"))
-}
-
 //resend email for email verification
 module.exports.resendEmailVerification = async (req, res) => {
     const { id, email } = req.body;
@@ -276,6 +280,118 @@ module.exports.resendEmailVerification = async (req, res) => {
         })
 }
 
+// verify page route
+module.exports.verifyPage = async (req, res) => {
+    res.sendFile(path.join(__dirname, "../views/verified.html"))
+}
+
+//signup with mobile number
+module.exports.signupWithMobile = async (req, res) => {
+    const { mobileNo, password, userName, fullName } = req.body;
+    User.find({ mobileNo })
+        .then(result => {
+            if (result.length > 0) {
+                if (result[0].verified) {
+                    res.json({
+                        status: "FAILED",
+                        message: "User has been already registered!"
+                    })
+                }
+                else {
+                    res.json({
+                        status: "FAILED",
+                        message: "Oops! Looks like you didn't verify your account. Please verify your OTP."
+                    })
+                }
+            } else {
+                User.find({ userName })
+                    .then(result => {
+                        if (result.length > 0) {
+                            res.json({
+                                status: "FAILED",
+                                message: "Username should be unique. Please try with another one!"
+                            })
+                        } else {
+                            bcrypt.hash(password, 10)
+                                .then((hashedPassword) => {
+                                    const newUser = new User({
+                                        userName,
+                                        fullName,
+                                        mobileNo,
+                                        password: hashedPassword
+                                    })
+                                    newUser.save().then(result => {
+                                        sendOTP(result, res)
+                                    }).catch(err => {
+                                        res.json({
+                                            status: "FAILED",
+                                            message: "An error occurred while saving user account!"
+                                        })
+                                    })
+                                }).catch(err => {
+                                    res.json({
+                                        status: "FAILED",
+                                        message: "An error occurred while hashing password!"
+                                    })
+                                })
+                        }
+                    }).catch(err => {
+                        console.log(err);
+                        res.json({
+                            status: "FAILED",
+                            message: "Something went wrong while checking for user!"
+                        })
+                    })
+            }
+        })
+}
+
+const sendOTP = async ({ _id, mobileNo }, res) => {
+    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(generatedOtp);
+    bcrypt.hash(generatedOtp, 10)
+        .then(hashedOtp => {
+            const newVerification = new UserVerification({
+                userId: _id,
+                uniqueString: hashedOtp,
+                createdAt: Date.now(),
+                expiresAt: Date.now() + 21600000,
+            })
+            newVerification.save()
+                .then(result => {
+                    client.messages
+                        .create({
+                            body: generatedOtp,
+                            from: twilioNum,
+                            to: `+91${mobileNo}`
+                        })
+                        .then(result => {
+                            res.json({
+                                status: "PENDING",
+                                message: "OTP has been sent successfully"
+                            })
+                        }).catch(err => {
+                            console.log(err)
+                            res.json({
+                                status: "FAILED",
+                                message: "OTP verification failed"
+                            })
+                        })
+                }).catch(err => {
+                    console.log(err);
+                    res.json({
+                        status: "FAILED",
+                        message: "An error occurred while saving verification data!"
+                    })
+                })
+        }).catch(err => {
+            res.json({
+                status: "FAILED",
+                message: "An error occurred while hashing OTP data!"
+            })
+        })
+}
+
 //verify with mobile number
 module.exports.verifyMobile = async (req, res) => {
     console.log("verify mobile runs");
@@ -303,13 +419,11 @@ module.exports.verifyMobile = async (req, res) => {
                                         message: "clearing user with expired unique string failed"
                                     })
                                 })
-
                         }).catch(err => {
                             res.json({
                                 status: "FAILED",
                                 message: "An error occurred while clearing expired user verification record"
                             })
-
                         })
                 }
                 //valid record exist, so we validate the otp here
@@ -361,7 +475,6 @@ module.exports.verifyMobile = async (req, res) => {
                     status: "FAILED",
                     message: "Account record doesn't exist or has been verified already. please signup."
                 })
-
             }
         }).catch(err => {
             console.log(err);
@@ -370,8 +483,8 @@ module.exports.verifyMobile = async (req, res) => {
                 message: "something went wrong while existing user verification checking the record"
             })
         })
-
 }
+
 //resend otp for  mobile verification
 module.exports.resendMobileVerification = async (req, res) => {
     const { id, mobileNo } = req.body;
@@ -418,114 +531,6 @@ module.exports.resendMobileVerification = async (req, res) => {
             })
         })
 }
-
-//signup with mobile number
-module.exports.signupWithMobile = async (req, res) => {
-    const { mobileNo, password, userName, fullName } = req.body;
-
-    User.find({ mobileNo })
-        .then(result => {
-            if (result.length > 0) {
-                res.json({
-                    status: "FAILED",
-                    message: "User has been already registered!"
-                })
-
-            } else {
-                User.find({ userName })
-                    .then(result => {
-                        if (result.length > 0) {
-                            res.json({
-                                status: "FAILED",
-                                message: "Username should be unique. Please try with another one!"
-                            })
-                        } else {
-                            bcrypt.hash(password, 10)
-                                .then((hashedPassword) => {
-                                    const newUser = new User({
-                                        userName,
-                                        fullName,
-                                        mobileNo,
-                                        password: hashedPassword
-                                    })
-                                    newUser.save().then(result => {
-                                        sendOTP(result, res)
-                                    }).catch(err => {
-                                        res.json({
-                                            status: "FAILED",
-                                            message: "An error occurred while saving user account!"
-                                        })
-                                    })
-                                }).catch(err => {
-                                    res.json({
-                                        status: "FAILED",
-                                        message: "An error occurred while hashing password!"
-                                    })
-                                })
-
-                        }
-                    }).catch(err => {
-                        console.log(err);
-                        res.json({
-                            status: "FAILED",
-                            message: "Something went wrong while checking for user!"
-                        })
-                    })
-
-
-
-            }
-        })
-
-}
-const sendOTP = async ({ _id, mobileNo }, res) => {
-    const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(generatedOtp);
-    bcrypt.hash(generatedOtp, 10)
-        .then(hashedOtp => {
-            const newVerification = new UserVerification({
-                userId: _id,
-                uniqueString: hashedOtp,
-                createdAt: Date.now(),
-                expiresAt: Date.now() + 21600000,
-            })
-            newVerification.save()
-                .then(result => {
-                    client.messages
-                        .create({
-                            body: generatedOtp,
-                            from: twilioNum,
-                            to: `+91${mobileNo}`
-                        })
-                        .then(result => {
-                            res.json({
-                                status: "PENDING",
-                                message: "OTP has been sent successfully"
-                            })
-                        }).catch(err => {
-                            console.log(err)
-                            res.json({
-                                status: "FAILED",
-                                message: "OTP verification failed"
-                            })
-                        })
-                }).catch(err => {
-                    console.log(err);
-                    res.json({
-                        status: "FAILED",
-                        message: "An error occurred while saving verification data!"
-                    })
-                })
-        }).catch(err => {
-            res.json({
-                status: "FAILED",
-                message: "An error occurred while hashing OTP data!"
-            })
-        })
-}
-
-//verify account with otp
-
 
 //sign in with username, email, mobileNo
 module.exports.signIn = async (req, res) => {
@@ -592,4 +597,188 @@ module.exports.signIn = async (req, res) => {
             message: "Something went wrong while finding credentials!"
         })
     })
+}
+
+//reset password stuff for user verified with their email
+module.exports.resetPasswordEmailRequest = async (req, res) => {
+    const { email, redirectUrl } = req.body;
+    //check if email exist or not
+    User.find({ email })
+        .then(data => {
+            if (data.length) {
+                if (!data[0].verified) {
+                    res.json({
+                        status: "FAILED",
+                        message: "Email hasn't been verified yet. check your inbox"
+                    })
+                } else {
+                    //send email to reset password
+                    sendEmailReset(data[0], redirectUrl, res);
+                }
+            } else {
+                res.json({
+                    status: "FAILED",
+                    message: "No account find with supplied email"
+                })
+            }
+        }).catch(err => {
+            console.log(err);
+            res.json({
+                status: "FAILED",
+                message: "An error occurred while checking for existing email"
+            })
+        })
+}
+
+const sendEmailReset = ({ _id, email }, redirectUrl, res) => {
+    const resetString = uuidv4() + _id;
+    //clear the existing reset password record
+    PasswordReset.deleteMany({ userId: _id })
+        .then(result => {
+            //reset record deleted successfully now we can send mail
+            //redirect url would be the frontend localhost which we want to render after the reset password url
+            const mailOptions = {
+                from: "lillian70@ethereal.email",
+                to: email,
+                subject: "Password Reset",
+                html: `<p>We heard that you lost the password. </p>
+            <p>Don't worry use the below link to reset it.</p>
+            <p>This link <b> expires in 60 minutes.</b></p><p>Press<a href=${redirectUrl + _id + "/" + resetString}> here </a>to proceed. </p>`
+            }
+            bcrypt.hash(resetString, 10)
+                .then(hashedResetString => {
+                    // set values in password reset collection
+                    const newPasswordReset = new PasswordReset({
+                        userId: _id,
+                        resetString: hashedResetString,
+                        createdAt: Date.now(),
+                        expiresAt: Date.now() + 3600000
+                    })
+                    newPasswordReset.save()
+                        .then(() => {
+                            transporter.sendMail(mailOptions)
+                                .then(() => {
+                                    res.json({
+                                        status: "PENDING",
+                                        message: "Password reset email sent"
+                                    })
+                                })
+                                .catch(err => {
+                                    res.json({
+                                        status: "FAILED",
+                                        message: "An error occurred while sending the mail for reset password"
+                                    })
+                                })
+                        }).catch(err => {
+                            console.log(err);
+                            res.json({
+                                status: "FAILED",
+                                message: "An error occurred while hashing the password reset data"
+                            })
+                        })
+                }).catch(err => {
+                    res.json({
+                        status: "FAILED",
+                        message: "An error occurred while hashing the reset string"
+                    })
+                })
+        }).catch(err => {
+            res.json({
+                status: "FAILED",
+                message: "An error occurred while deleting the existing reset password record"
+            })
+        })
+}
+
+//actual reset password 
+//that api runs when user write their new password and submit the form
+module.exports.resetPasswordEmailVerification = async (req, res) => {
+    const { userId, resetString, newPassword } = req.body;
+    PasswordReset.find({ userId })
+        .then(result => {
+            if (result.length) {
+                //password reset record exist so we can proceed
+                const { expiresAt } = result[0];
+                //check if the password is expires?
+                if (expiresAt < Date.now()) {
+                    //password is expired
+                    PasswordReset.deleteOne({ userId })
+                        .then(result => {
+                            //reset record deleted successfully
+                            res.json({
+                                status: "FAILED",
+                                message: "Password reset link expired!"
+                            })
+                        }).catch(err => {
+                            res.json({
+                                status: "FAILED",
+                                message: "An error occurred while deleting the expires reset password record"
+                            })
+                        })
+                } else {
+                    //valid record present so we can proceed
+                    //first compare the hashed reset string
+                    bcrypt.compare(resetString, result[0].resetString)
+                        .then(result => {
+                            if (result) {
+                                //strings matched
+                                //hashed the password and update the user with new password
+                                bcrypt.hash(newPassword, 10)
+                                    .then(hashedPassword => {
+                                        User.updateOne({ _id: userId }, { password: hashedPassword })
+                                            .then(() => {
+                                                //update complete now we can delete reset record
+                                                PasswordReset.deleteOne({ userId })
+                                                    .then(() => {
+                                                        //both user and password reset record updates
+                                                        res.json({
+                                                            status: "SUCCESS",
+                                                            message: "Password updated successfully"
+                                                        })
+                                                    }).catch(err => {
+                                                        console.log(err)
+                                                        res.json({
+                                                            status: "FAILED",
+                                                            message: "An error occurred while finalizing reset password."
+                                                        })
+                                                    })
+                                            }).catch(err => {
+                                                console.log(err)
+                                                res.json({
+                                                    status: "FAILED",
+                                                    message: "Failed to reset your password. Try again!"
+                                                })
+                                            })
+                                    }).catch(err => {
+                                        res.json({
+                                            status: "FAILED",
+                                            message: "An error occurred while hashing the new password. Try again!"
+                                        })
+                                    })
+                            } else {
+                                //incorrect reset string
+                                res.json({
+                                    status: "FAILED",
+                                    message: "Incorrect reset string. check you inbox properly"
+                                })
+                            }
+                        }).catch(err => {
+                            res.json({
+                                status: "FAILED",
+                                message: "An error occurred while comparing the resetString "
+                            })
+                        })
+                }
+            } else {
+                res.json({
+                    status: "FAILED",
+                    message: "Reset password record does not exist! try again."
+                })
+            }
+        }).catch(err => {
+            res.json({
+                status: "FAILED",
+                message: "An error occurred while searching the existing reset password record"
+            })
+        })
 }

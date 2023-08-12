@@ -9,6 +9,8 @@ router.post("/signup/mobile", controller.signupWithMobile)
 router.post("/verify/mobile", controller.verifyMobile);
 router.post("/signup/mobile/resend/otp", controller.resendMobileVerification);
 router.get("/verified", controller.verifyPage)
+router.post("/email/password-reset/request", controller.resetPasswordEmailRequest)
+router.post("/email/password-reset/verification", controller.resetPasswordEmailVerification)
 
 
 //login

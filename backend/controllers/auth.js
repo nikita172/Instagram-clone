@@ -20,8 +20,8 @@ const transporter = nodemailer.createTransport({
     host: 'smtp.ethereal.email',
     port: 587,
     auth: {
-        user: 'lillian70@ethereal.email',
-        pass: 'dq1RDC6jNBNQU4ajbU'
+        user: process.env.AUTH_EMAIL,
+        pass: process.env.AUTH_PASS
     }
 })
 
@@ -120,7 +120,7 @@ const sendVerificationEmail = async ({ _id, email }, res) => {
     const currentUrl = "http://localhost:8000/";
     const uniqueString = uuidv4() + _id;
     const mailOptions = {
-        from: "soledad.batz4@ethereal.email",
+        from: process.env.AUTH_EMAIL,
         to: email,
         subject: "verify your email address",
         html: `<p>Please, Verify your email address to complete the signup and login into you account.</p>

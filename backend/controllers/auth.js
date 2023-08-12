@@ -348,7 +348,6 @@ module.exports.signupWithMobile = async (req, res) => {
 
 const sendOTP = async ({ _id, mobileNo }, res) => {
     const generatedOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log(generatedOtp);
     bcrypt.hash(generatedOtp, 10)
         .then(hashedOtp => {
             const newVerification = new UserVerification({
@@ -630,7 +629,7 @@ module.exports.resetPasswordEmailRequest = async (req, res) => {
         })
 }
 
-const sendEmailReset = ({ _id, email }, redirectUrl, res) => {
+const sendEmailReset = async ({ _id, email }, redirectUrl, res) => {
     const resetString = uuidv4() + _id;
     //clear the existing reset password record
     PasswordReset.deleteMany({ userId: _id })
@@ -673,7 +672,7 @@ const sendEmailReset = ({ _id, email }, redirectUrl, res) => {
                             console.log(err);
                             res.json({
                                 status: "FAILED",
-                                message: "An error occurred while hashing the password reset data"
+                                message: "An error occurred while saving the  password reset data"
                             })
                         })
                 }).catch(err => {
@@ -779,6 +778,201 @@ module.exports.resetPasswordEmailVerification = async (req, res) => {
             res.json({
                 status: "FAILED",
                 message: "An error occurred while searching the existing reset password record"
+            })
+        })
+}
+
+//reset password stuff for user verified with their mobile number
+module.exports.resetPasswordMobileOtpRequest = async (req, res) => {
+    const { mobileNo } = req.body;
+    //check if mobileNo exist or not
+    User.find({ mobileNo })
+        .then(data => {
+            if (data.length) {
+                if (!data[0].verified) {
+                    res.json({
+                        status: "FAILED",
+                        message: "mobile number hasn't been verified yet."
+                    })
+                } else {
+                    //send email to reset password
+                    sendMobileReset(data[0], res);
+                }
+            } else {
+                res.json({
+                    status: "FAILED",
+                    message: "No account find with supplied mobile number"
+                })
+            }
+        }).catch(err => {
+            console.log(err);
+            res.json({
+                status: "FAILED",
+                message: "An error occurred while checking for existing mobile number"
+            })
+        })
+}
+
+const sendMobileReset = async ({ _id, mobileNo }, res) => {
+    const resetString = Math.floor(100000 + Math.random() * 900000).toString();
+    //clear the existing reset password record
+    PasswordReset.deleteMany({ userId: _id })
+        .then(result => {
+            bcrypt.hash(resetString, 10)
+                .then(hashedResetString => {
+                    const newPasswordReset = new PasswordReset({
+                        userId: _id,
+                        resetString: hashedResetString,
+                        createdAt: Date.now(),
+                        expiresAt: Date.now() + 3600000
+                    })
+                    newPasswordReset.save()
+                        .then(() => {
+                            client.messages
+                                .create({
+                                    body: "Forget Password? Here is your OTP- " + resetString,
+                                    from: twilioNum,
+                                    to: `+91${mobileNo}`
+                                })
+                                .then(result => {
+                                    res.json({
+                                        status: "PENDING",
+                                        message: "OTP has been sent successfully"
+                                    })
+                                }).catch(err => {
+                                    console.log(err)
+                                    res.json({
+                                        status: "FAILED",
+                                        message: "OTP verification failed"
+                                    })
+                                })
+                        }).catch(err => {
+                            console.log(err);
+                            res.json({
+                                status: "FAILED",
+                                message: "An error occurred while saving the  password reset data"
+                            })
+                        })
+                }).catch(err => {
+                    res.json({
+                        status: "FAILED",
+                        message: "An error occurred while hashing the reset string"
+                    })
+                })
+        }).catch(err => {
+            res.json({
+                status: "FAILED",
+                message: "An error occurred while deleting the existing reset password record"
+            })
+        })
+}
+
+//verification of the otp send to change password with mobile
+module.exports.resetPasswordMobileOtpVerification = async (req, res) => {
+    const { mobileNo, resetString, newPassword } = req.body;
+    User.find({ mobileNo })
+        .then((result) => {
+            if (result) {
+                console.log(result)
+                const userId = result[0]._id;
+                PasswordReset.find({ userId })
+                    .then(result => {
+                        if (result.length) {
+                            //password reset record exist so we can proceed
+                            const { expiresAt } = result[0];
+                            //check if the password is expires?
+                            if (expiresAt < Date.now()) {
+                                //password is expired
+                                PasswordReset.deleteOne({ userId })
+                                    .then(result => {
+                                        //reset record deleted successfully
+                                        res.json({
+                                            status: "FAILED",
+                                            message: "Password reset OTP expired!"
+                                        })
+                                    }).catch(err => {
+                                        res.json({
+                                            status: "FAILED",
+                                            message: "An error occurred while deleting the expires reset password record"
+                                        })
+                                    })
+                            } else {
+                                //valid record present so we can proceed
+                                //first compare the hashed reset string
+                                bcrypt.compare(resetString, result[0].resetString)
+                                    .then(result => {
+                                        if (result) {
+                                            //strings matched
+                                            //hashed the password and update the user with new password
+                                            bcrypt.hash(newPassword, 10)
+                                                .then(hashedPassword => {
+                                                    User.updateOne({ _id: userId }, { password: hashedPassword })
+                                                        .then(() => {
+                                                            //update complete now we can delete reset record
+                                                            PasswordReset.deleteOne({ userId })
+                                                                .then(() => {
+                                                                    //both user and password reset record updates
+                                                                    res.json({
+                                                                        status: "SUCCESS",
+                                                                        message: "Password updated successfully"
+                                                                    })
+                                                                }).catch(err => {
+                                                                    console.log(err)
+                                                                    res.json({
+                                                                        status: "FAILED",
+                                                                        message: "An error occurred while finalizing reset password."
+                                                                    })
+                                                                })
+                                                        }).catch(err => {
+                                                            console.log(err)
+                                                            res.json({
+                                                                status: "FAILED",
+                                                                message: "Failed to reset your password. Try again!"
+                                                            })
+                                                        })
+                                                }).catch(err => {
+                                                    res.json({
+                                                        status: "FAILED",
+                                                        message: "An error occurred while hashing the new password. Try again!"
+                                                    })
+                                                })
+                                        } else {
+                                            //incorrect reset string
+                                            res.json({
+                                                status: "FAILED",
+                                                message: "Incorrect reset string. check your inbox properly"
+                                            })
+                                        }
+                                    }).catch(err => {
+                                        res.json({
+                                            status: "FAILED",
+                                            message: "An error occurred while comparing the resetString "
+                                        })
+                                    })
+                            }
+                        } else {
+                            res.json({
+                                status: "FAILED",
+                                message: "Reset password record does not exist!.Please request for the otp first."
+                            })
+                        }
+                    }).catch(err => {
+                        res.json({
+                            status: "FAILED",
+                            message: "An error occurred while searching the existing reset password record"
+                        })
+                    })
+            } else {
+                res.json({
+                    status: "FAILED",
+                    message: "User does not exist with this mobile number"
+                })
+            }
+        }).catch(err => {
+            console.log(err);
+            res.json({
+                status: "FAILED",
+                message: "Something went wrong while finding user.Please try again!"
             })
         })
 }

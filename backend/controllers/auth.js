@@ -12,6 +12,7 @@ const accountSid = process.env.ACCOUNT_SID;
 const authToken = process.env.AUTH_TOKEN;
 const twilioNum = process.env.TWILIO_NUM;
 const client = require('twilio')(accountSid, authToken);
+const passport = require("passport");
 
 //for test purpose
 let testAccount = nodemailer.createTestAccount(); //fake smtp server
@@ -975,4 +976,21 @@ module.exports.resetPasswordMobileOtpVerification = async (req, res) => {
                 message: "Something went wrong while finding user.Please try again!"
             })
         })
+}
+
+module.exports.signinFailedFacebook = (req, res) => {
+    res.status(401).json({
+        success: false,
+        message: "failure",
+    });
+}
+
+module.exports.signinFacebookSuccess = (req, res) => {
+    if (req.user) {
+        res.status(200).json({
+            success: true,
+            message: "successful",
+            user: req.user,
+        });
+    }
 }

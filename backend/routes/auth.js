@@ -1,5 +1,8 @@
 const router = require("express").Router();
 const controller = require("../controllers/auth")
+const passport = require("passport")
+require("../middlewares/passport.js")
+
 
 //register
 router.post("/signup/email", controller.signupWithEmail)
@@ -14,6 +17,22 @@ router.post("/email/password-reset/verification", controller.resetPasswordEmailV
 router.post("/mobile/password-reset/otp/request", controller.resetPasswordMobileOtpRequest)
 router.post("/mobile/password-reset/otp/verification", controller.resetPasswordMobileOtpVerification)
 
+
+//facebook signin authentication
+router.get("/signin/facebook/failed", controller.signinFailedFacebook);
+router.get("/signin/facebook/success", controller.signinFacebookSuccess)
+
+const CLIENT_URL = "http://localhost:3000/";
+
+router.get('/signin/facebook',
+  passport.authenticate('facebook', { scope: ["profile"] }));
+
+router.get('/signin/facebook/callback',
+  passport.authenticate('facebook', {
+    successRedirect: CLIENT_URL,
+    failureRedirect: "/auth/user/signin/facebook/failed",
+  })
+);
 
 
 //login

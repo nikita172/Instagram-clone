@@ -1,0 +1,23 @@
+.homeContainer{
+  display: flex;
+  /* width: 100vw; */
+  height: 100vh;
+}
+.sidebarContainer{
+  position: fixed;
+  height: 100%;
+  display: flex;
+  width:240px;
+  border-right: 1px solid rgb(227, 217, 217);
+}
+.feedContainer{
+  width: 730px;
+  margin-left: 240px;
+  
+}
+.suggestionContainer{
+  display: flex;
+  flex: 2;
+  background-color: pink;
+
+}

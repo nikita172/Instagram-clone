@@ -1,0 +1,6 @@
+.postsContainer{
+  width: 100%;
+  flex-direction: column;
+  margin-top: 40px;
+  margin-left: 215px;
+}

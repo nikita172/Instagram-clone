@@ -1,0 +1,47 @@
+.sidebarWrapper{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin: 25px; 
+  /* width: 100%; */
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 16px;
+}
+.instaTitleHome{
+  font-family: "Satisfy";
+  font-size: 27px;
+  
+}
+.menubar{
+  display: flex;
+  align-items: center;
+  padding-top: 30px;
+
+ 
+  
+}
+.menuIconContainer{
+  position: relative;
+  padding-right: 20px;
+}
+.count{
+  position: absolute;
+  left: 13px;
+  top: -7px;
+  background-color: red;
+  border-radius: 50%;
+  border: .5px solid white;
+  color: white;
+  padding: 0px 5px;
+  font-size: 12px;
+  display: flex;align-items: center;
+  justify-content: center;
+  
+}
+.more{
+  display: flex;
+  align-items: center;
+}
+.moreIcon{
+  margin-right: 20px;
+}

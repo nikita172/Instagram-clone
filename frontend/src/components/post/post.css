@@ -1,0 +1,79 @@
+.post{
+  margin-top: 20px;
+  width: 450px;
+  border-bottom: 1px solid rgb(217, 216, 216);
+  padding-bottom: 10px;
+}
+.postTop{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.postTopLeft{
+  display: flex;
+  align-items: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.postProfileImg{
+  width: 35px;
+  height: 35  px;
+  border-radius: 50%;
+}
+.postsHolderId {
+  margin-left: 10px;
+  font-weight:600;
+  font-size: 14px;
+  display: flex;align-items: center;
+  justify-content: center;
+
+}
+.uploadTime{
+  margin-left: 5px;
+  display: flex;
+  align-items:center;
+}
+.postTopLeft .dot{
+  background-color: gray;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  margin-left: 5px;
+  margin-right: 5px;
+
+}
+.postTime{
+  color: gray;
+  font-weight: 300;
+  font-size: 15px;
+}
+.subscribe{
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.subsLeft{
+  display: flex;
+  gap:7px;
+  align-items: center;
+}
+.totalLikes{
+ padding: 4px 0px;
+}
+.postDesc{
+  font-size: 14px;
+  font-weight: 500;
+}
+.userDesc{
+  font-weight: 400;
+}
+.seeMoreComments{
+  font-size: 14px;
+  color: gray;
+  margin-top: 0;
+}
+.viewAllComments{
+  color: gray;
+  font-size: 15px;
+  margin-top: 5px;
+}

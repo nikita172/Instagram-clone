@@ -5,6 +5,7 @@ const postImages = [
   'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8Y2Fyc3xlbnwwfHwwfHx8MA%3D%3D&w=1000&q=80',
   'https://img.freepik.com/free-photo/blue-black-muscle-car-with-license-plate-that-says-trans-front_1340-23399.jpg?w=2000',
   'https://imgd-ct.aeplcdn.com/370x208/n/cw/ec/128413/scorpio-exterior-right-front-three-quarter-46.jpeg?isig=0&q=75',
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTavvhGZzWDkeUf9evz55xRHSimT6L3mLdfv9Is5_h_&s"
   // Add more post image URLs
 ];
 

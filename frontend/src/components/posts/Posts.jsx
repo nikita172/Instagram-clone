@@ -1,13 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 import "./posts.css"
 import Post from '../post/Post'
-import Reel from '../reel/Reel'
+
 const Posts = () => {
   return (
     <div className='postsContainer'>
-      <Post />
-      <Post />
-      <Reel />
+      <Post type="carousel" />
+      <Post type="carousel" />
+      <Post type="carousel" />
+      <Post type="reel" src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4" />
+      <Post type="reel" src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4" />
+      <Post type="reel" src="https://media.w3.org/2010/05/sintel/trailer_hd.mp4" />
+      <Post type="reel" src="https://samplelib.com/lib/preview/mp4/sample-5s.mp4" />
     </div>
   )
 }

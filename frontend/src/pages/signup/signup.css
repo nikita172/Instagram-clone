@@ -42,7 +42,7 @@ body {
   font-weight: 500;
   font-family: "Roboto";
 }
-button {
+.loginwithfb {
   width: 270px;
   margin: 17px;
   padding: 6px;
@@ -52,7 +52,7 @@ button {
   border: none;
   cursor: pointer;
 }
-button img {
+.fblogo{
   background-color: #ffffff;
   height: 20px;
   border-radius: 10px;

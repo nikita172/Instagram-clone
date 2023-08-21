@@ -1,6 +1,7 @@
 import React from 'react'
-import Carousel from "../carousel/Carousel"
 import "./post.css"
+import Carousel from "../carousel/Carousel"
+import ReelVideo from '../reelVideo/ReelVideo'
 const Post = (props) => {
   return (
     <div className="post">
@@ -16,7 +17,7 @@ const Post = (props) => {
         <img className="postTopRight" src="/images/more-horizontal.svg" />
       </div>
       <div className="postBottom">
-        <Carousel />
+        {props.type === "carousel" ? <Carousel /> : <ReelVideo src={props.src} />}
         <div className='postDescription'>
           <div className="subscribe">
             <div className='subsLeft'>

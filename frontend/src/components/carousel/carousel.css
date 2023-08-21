@@ -8,8 +8,8 @@
 .post-image-container {
   position: relative;
   overflow: hidden;
-  border-radius: 2px;
-  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  border: 1px solid rgb(232, 227, 227);
 }
 
 .post-image {

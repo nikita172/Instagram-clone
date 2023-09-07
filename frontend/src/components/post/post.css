@@ -41,10 +41,10 @@
   margin-right: 5px;
 
 }
-.postTime{
-  color: gray;
-  font-weight: 300;
-  font-size: 15px;
+.online{
+  color:var(--gray);
+  font-weight: 400;
+  font-size: 13px;
 }
 .subscribe{
   margin-top: 10px;

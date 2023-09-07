@@ -1,0 +1,49 @@
+.suggestionWrapper{
+  margin-left: 100px;
+  margin-top: 55px;
+  width: 300px;
+}
+.suggestionTop{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.suggestionLeft{
+  display: flex;
+}
+.suggestionUserProfile{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.suggestionUserName{
+  margin-left: 10px;
+}
+.suggestionFullName{
+  font-weight: 500;
+}
+.suggestionUniqueName{
+  line-height: 12px;
+  color: gray;
+  font-size: 14px;
+}
+.suggestionRight{
+  color: var(--skyblue);
+  font-size: 13px;
+  font-weight: 500;
+}
+.suggestionTag{
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.forYou{
+  font-size: 14px;
+  color: gray;
+  font-weight: 500;
+}
+.seeAll{
+  font-size: 13px;
+  font-weight: 500;
+}

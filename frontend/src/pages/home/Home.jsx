@@ -5,6 +5,7 @@ import "./home.css"
 import Sidebar from '../../components/sidebar/Sidebar';
 import Stories from '../../components/stories/Stories';
 import Posts from '../../components/posts/Posts';
+import Suggestion from '../../components/suggestion/Suggestion';
 const Home = () => {
   // useEffect(() => {
   //   const getData = async () => {
@@ -23,7 +24,9 @@ const Home = () => {
         <Stories />
         <Posts />
       </div>
-      <div className='suggestionContainer'></div>
+      <div className='suggestionContainer'>
+        <Suggestion />
+      </div>
     </div>
   )
 }

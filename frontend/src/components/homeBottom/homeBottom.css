@@ -1,0 +1,10 @@
+.homeBottom{
+  margin-top: 50px;
+}
+.footerHomeTop ,.footerhomeBottom{
+  color: var(--lightgray);
+  font-size: 13px;
+}
+.footerhomeBottom{
+  margin-top: 20px;
+}

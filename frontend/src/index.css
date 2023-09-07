@@ -2,3 +2,8 @@
   padding: 0;
   margin: 0;
 }
+:root{
+  --skyblue:rgb(0, 179, 255);
+  --gray: gray;
+  --lightgray:rgb(173, 172, 172);
+}

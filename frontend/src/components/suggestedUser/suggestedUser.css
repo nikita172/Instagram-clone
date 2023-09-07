@@ -1,0 +1,30 @@
+.suggestionUser{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.suggestionUserLeft{
+  display: flex;
+}
+.suggestionUserProfile{
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.suggestionUserName{
+  margin-left: 10px;
+}
+.suggestionFullName{
+  font-weight: 500;
+}
+.followedBy{
+  line-height: 12px;
+  color: var(--gray);
+  font-size: 12px;
+}
+.suggestionUserRight{
+  color:var(--skyblue);
+  font-size: 13px;
+  font-weight: 500;
+}

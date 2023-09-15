@@ -1,8 +1,12 @@
 import React from "react";
 import "./signup.css";
 import Bottom from "../../components/bottom/Bottom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  // const location = useLocation();
+  // console.log(location)
+  const navigate = useNavigate();
   return (
     <div>
       <div className="signupContainer">
@@ -73,7 +77,7 @@ const Signup = () => {
       </div>
       <div className="mainContainerBottom">
         <div className="mc1">
-          Have an account ?<div className="signupBtn"> Log in</div>
+          Have an account ?<div className="signupBtn" onClick={() => navigate("/signin")}> Log in</div>
         </div>
         <div className="mc2">
           <div className="downloadSection">Get the app.</div>

@@ -1,7 +1,9 @@
 import React from 'react'
 import "./signin.css"
 import Bottom from '../../components/bottom/Bottom'
+import { useNavigate } from "react-router-dom";
 const Signin = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <div className='signinContainer'>
@@ -34,7 +36,7 @@ const Signin = () => {
             <div className='mainContainerBottom'>
               <div className='mc1'>
                 Don't have an account?
-                <div className='signupBtn'>Sign up</div>
+                <div className='signupBtn' onClick={() => navigate("/signup")}>Sign up</div>
               </div>
               <div className='mc2'>
                 <div className='downloadSection'>

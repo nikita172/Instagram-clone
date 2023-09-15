@@ -1,10 +1,4 @@
-* {
-  padding: 0;
-  margin: 0;
-}
-body {
-  background-color: #fafafa;
-}
+
 .signupContainer {
   margin-top: 20px;
   display: flex;
@@ -41,10 +35,10 @@ body {
   font-size: 13px;
   font-weight: 500;
   font-family: "Roboto";
+  width: 100%;
 }
 .loginwithfb {
-  width: 270px;
-  margin: 17px;
+  
   padding: 6px;
   background-color: rgb(47, 124, 255);
   color: white;
@@ -113,6 +107,14 @@ a {
 .signupbtn {
   padding: 7px;
   font-weight: 700px;
+  background: var(--skyblue);
+  width: 100%;
+  color: white;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
 }
 .mainContainerBottom {
   margin-top: 10px;
@@ -133,6 +135,7 @@ a {
 .signupBtn {
   color: rgb(47, 124, 255);
   padding-left: 5px;
+  cursor: pointer;
 }
 .mc2 {
   display: flex;

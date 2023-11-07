@@ -4,6 +4,8 @@ import Signin from "./pages/signin/Signin";
 import Signup from "./pages/signup/Signup";
 import PasswordReset from "./pages/passwordReset/PasswordReset";
 import SigninWithFacebook from "./pages/signinWithFacebook/SigninWithFacebook";
+import Practice from "./pages/practice/Practice";
+import Profile from "./pages/profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,14 @@ const router = createBrowserRouter([
   {
     path: "/:id/:resetString",
     element: <PasswordReset />
+  },
+  {
+    path: "profile/:id",
+    element: <Profile />
+  },
+  {
+    path: "/practice",
+    element: <Practice />
   }
 ])
 

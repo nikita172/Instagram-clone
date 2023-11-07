@@ -1,0 +1,69 @@
+.searchbarContainer{
+  position: absolute;
+  left: 117px;
+  z-index: 100;
+  background: white;
+  border-top-right-radius: 15px;
+  border-bottom-right-radius: 15px;
+  height: 100%;
+  box-shadow: 2px 0px 10px -2px rgba(0, 0, 0, 0.5);
+  animation: openSearchPanel 0.5s linear;
+}
+@keyframes openSearchPanel {
+  0%{
+    transform: translateX(-100px)
+  }
+  100%{
+    transform: translateX(0px);
+  }
+  
+}
+.searchTag{
+  padding: 30px 30px 0px 30px;
+}
+.searchInputContainer{
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(240, 232, 232);
+  width: 320px;
+  border-radius: 5px;
+  margin: 50px 30px 0px 30px;
+}
+.searchInput{
+  border: none;
+  outline: none;  
+  width: 90%;
+  background-color: rgb(240, 232, 232);
+  color: white;
+}
+.searchInput::placeholder{
+  color: black;
+  font-weight: 200;
+}
+.cancelSearchButton{
+  font-size: 10px;
+  padding: 2px 5px;
+  background-color: rgb(199, 191, 191);
+  color: white;
+  border-radius: 50%;
+}
+.borderBottom{
+  margin-top: 50px;
+  border-bottom: 1px solid var(--border-light-gray);
+
+}
+.recentTitle{
+  font-size: 17px;
+  padding: 30px 30px 0px 30px;
+}
+.noRecentFound{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto;
+  color: var(--lightgray);
+  height: 200px;
+
+}

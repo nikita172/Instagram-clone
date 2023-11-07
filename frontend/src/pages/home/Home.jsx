@@ -15,18 +15,25 @@ const Home = () => {
   //   getData();
 
   // }, [])
+
   return (
     <div className='homeContainer'>
-      <div className='sidebarContainer'>
+      <div className="sidebarContainer">
         <Sidebar />
+
       </div>
       <div className='feedContainer'>
-        <Stories />
+        <div className="allStories">
+          <Stories />
+
+        </div>
         <Posts />
       </div>
-      <div className='suggestionContainer'>
+      <div className="suggestionContainer">
         <Suggestion />
+
       </div>
+
     </div>
   )
 }

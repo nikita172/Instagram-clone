@@ -1,0 +1,109 @@
+.profileContainer{
+  display: flex;
+}
+
+.profileMainView{
+  width:917px;
+  margin-left: 430px;
+  margin-right: 150px;
+  
+  
+  
+}
+.profileSection{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 30px;
+  gap: 90px;
+
+}
+
+.profilePic{
+  width: 150px;
+  border-radius: 50%;
+}
+.profileUserName{
+  display: flex;
+  align-items: center;
+}
+.profileName{
+  font-size: 20px;
+}
+.editButton{
+  background-color: var(--border-light-gray);
+  font-size: 13.5px;
+  padding: 3px 10px;
+  font-weight: 500;
+  border-radius: 5px;
+  margin-left: 20px;
+}
+.archiveButton{
+  background-color: var(--border-light-gray);
+  font-size: 13.5px;
+  padding: 3px 10px;
+  font-weight: 500;
+  border-radius: 5px;
+  margin-left: 8px;
+  margin-right: 10px;
+}
+.followingPart{
+  margin-top: 20px;
+}
+.followingPart span{
+  margin-right: 25px;
+}
+.displayName{
+  margin-top: 15px;
+  font-weight: 600;
+
+}
+
+.profileHighlightsSec{
+  /* width: auto; */
+  overflow: hidden;
+  display: flex;
+  margin-top: 60px;
+  padding-bottom: 30px;
+  
+  padding-left: 20px;
+  margin-right: 20px;
+}
+.highlightSec{
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.highlightSec span{
+  margin-top: 5px;
+}
+.profileImg{
+  width: 85px;
+  border-radius: 50%;
+  border: 2px solid var(--border-light-gray);
+  padding: 2px;
+}
+
+.selfPosts{
+  border-top: 1px solid var(--border-light-gray);
+  margin-top: 20px;
+ 
+}
+.selectedTitles{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.selectedTitles span{
+  padding-top: 20px;
+  margin-right: 20px;
+  font-size: 14px;
+  letter-spacing: 1px;
+
+}
+.userPostsAndReels{
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 20px;
+}

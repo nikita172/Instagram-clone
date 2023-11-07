@@ -1,7 +1,6 @@
 const User = require("../models/User")
 const UserVerification = require("../models/UserVerification")
 const PasswordReset = require("../models/PasswordReset")
-const sms = require("../middlewares/sms")
 const bcrypt = require("bcrypt")
 const { v4: uuidv4 } = require("uuid")
 require("dotenv").config();
@@ -374,7 +373,7 @@ const sendOTP = async ({ _id, mobileNo }, res) => {
                             console.log(err)
                             res.json({
                                 status: "FAILED",
-                                message: "OTP verification failed"
+                                message: "Something went wrong in sending verification message."
                             })
                         })
                 }).catch(err => {

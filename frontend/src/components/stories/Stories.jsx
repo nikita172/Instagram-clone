@@ -66,11 +66,23 @@ let data = [
     name: "jyotikalura",
     img: ""
   },
+  {
+    id: 14,
+    name: "jyotikalura",
+    img: ""
+  },
+  {
+    id: 15,
+    name: "jyotikalura",
+    img: ""
+  },
 
 ]
 const Stories = () => {
   return (
     <div className='storiesSection'>
+
+
       <div className='story'>
         <div className='storyImgNotSeen'>
           <img className='storyProfile' src="/images/nikki.jpg" />
@@ -92,6 +104,7 @@ const Stories = () => {
 
 
     </div>
+
   )
 }
 
